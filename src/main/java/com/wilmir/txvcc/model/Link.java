@@ -77,7 +77,7 @@ public class Link {
 
 	@JsonView(Views.Public.class)
 	@Transient
-	private List<Node> servicedNodes;
+	private List<ServiceModel> services;
 	
 	
 	public Link() {
@@ -157,20 +157,20 @@ public class Link {
 		this.utilization = utilization;
 	}
 
-	public List<Node> getServicedNodes() {
-		return servicedNodes;
+	public List<ServiceModel> getServices() {
+		return services;
 	}
 
-	public void setServicedNodes(List<Node> servicedNodes) {
-		this.servicedNodes = servicedNodes;
+	public void setServices(List<ServiceModel> services) {
+		this.services = services;
 	}
-	
-	public void addServicedNode(Node node) {
-		if(this.servicedNodes == null) {
-			servicedNodes = new ArrayList<>();
+
+	public void addService(ServiceModel service) {
+		if(this.services == null) {
+			services = new ArrayList<>();
 		}
 		
-		servicedNodes.add(node);
+		services.add(service);
 	}
 
 	@Override
