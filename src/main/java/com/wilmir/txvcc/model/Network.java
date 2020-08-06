@@ -174,36 +174,37 @@ public class Network {
 	
 	@PostLoad
 	public void calculateUtilization() {
+		System.out.println("Calculating Utilization for: " + this.getNetworkName());
 		 calculateUtilization(this);
 	}
 
 
-	private void calculateUtilization(Network network) {		
-		Node homingNode = null;
-		
-		// Set the neighbor of all nodes and identify the homingNode in the process
-		for(Node currentNode : network.getNodes()) {
-			List<Link> incomingLinks = currentNode.getIncomingLinks();
+	private void calculateUtilization(Network network) {
+			Node homingNode = null;
 			
-			for(Link link : incomingLinks) {
-				Node source = link.getSource();
+			// Set the neighbor of all nodes and identify the homingNode in the process
+			for(Node currentNode : network.getNodes()) {
+				List<Link> incomingLinks = currentNode.getIncomingLinks();
 				
-				//the addNeighbor method also adds the currentNode to the source's neighbors
-				currentNode.addNeighbor(source);
+				for(Link link : incomingLinks) {
+					Node source = link.getSource();
+					
+					//the addNeighbor method also adds the currentNode to the source's neighbors
+					currentNode.addNeighbor(source);
+					
+				}
 				
+				//find the homingNode
+				if(currentNode.isHoming()) {
+					homingNode = currentNode;
+								}
 			}
 			
-			//find the homingNode
-			if(currentNode.isHoming()) {
-				homingNode = currentNode;
-							}
-		}
+			//Determine the shortest path from all nodes to the homing node
+			if(network.getLinks().size() > 0 && network.getNodes().size() > 0 && homingNode != null) {
+				bfs(homingNode, network.getNodes());
+			}
 		
-		//Determine the shortest path from all nodes to the homing node
-		if(network.getLinks().size() > 0 && network.getNodes().size() > 0 && homingNode != null) {
-			bfs(homingNode, network.getNodes());
-		}
-			
 	}
 	
 	
@@ -215,13 +216,11 @@ public class Network {
 		
 		while(!queue.isEmpty()){
 			Node currentNode = queue.remove();
-			System.out.println("currentNode is " + currentNode.getName());
 			currentNode.setVisited(true);
 						
 			addServicetoLinksAlongThePath(currentNode, currentNode);
 			
 			for(Node neighbor : currentNode.getNeighbors()){
-				System.out.println(currentNode.getName() + "'s neighbor: " + neighbor.getName() + " is visited? " + neighbor.isVisited());
 				if(!neighbor.isVisited()) {
 					queue.add(neighbor);
 					neighbor.setVisited(true);
