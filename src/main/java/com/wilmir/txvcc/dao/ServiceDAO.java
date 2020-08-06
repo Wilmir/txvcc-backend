@@ -83,5 +83,16 @@ public class ServiceDAO implements EntityDAO<ServiceModel> {
 	}
 
 
+	public void deleteByNodeId(int id) {
+		Session session = entityManager.unwrap(Session.class);
+		
+		Query<?> query = session.createQuery("delete from ServiceModel where node_id=:node_id");
+		
+		query.setParameter("node_id", id);
+		
+		query.executeUpdate();
+		
+	}
+
 
 }

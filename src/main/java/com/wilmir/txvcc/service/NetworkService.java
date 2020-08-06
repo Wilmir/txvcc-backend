@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.wilmir.txvcc.dao.LinkDAO;
 import com.wilmir.txvcc.dao.NetworkDAO;
+import com.wilmir.txvcc.dao.NodeDAO;
 import com.wilmir.txvcc.dao.ServiceDAO;
 import com.wilmir.txvcc.model.Link;
 import com.wilmir.txvcc.model.Network;
@@ -19,6 +20,9 @@ public class NetworkService implements EntityService<Network> {
 
 	@Autowired
 	private NetworkDAO networkDAO;
+	
+	@Autowired
+	private NodeDAO nodeDAO;
 	
 	@Autowired
 	private LinkDAO linkDAO;
@@ -88,6 +92,33 @@ public class NetworkService implements EntityService<Network> {
 		}
 		
 		return services;
+	}
+	
+	@Transactional
+	public void deleteNodes(int id){
+		Network network = networkDAO.getEntityById(id);
+		
+		for(Node node:network.getNodes()) {
+			nodeDAO.deleteById(node.getId());
+		}
+	}
+
+	@Transactional
+	public void deleteLinks(int id) {
+		Network network = networkDAO.getEntityById(id);
+		
+		for(Link link:network.getLinks()) {
+			linkDAO.deleteById(link.getId());
+		}		
+	}
+	
+	@Transactional
+	public void deleteServices(int id) {
+		Network network = networkDAO.getEntityById(id);
+
+		for(Node node : network.getNodes()) {
+			serviceDAO.deleteByNodeId(node.getId());
+		}
 	}
 
 }

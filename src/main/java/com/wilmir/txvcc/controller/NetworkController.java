@@ -100,18 +100,26 @@ public class NetworkController implements EntityController<Network> {
 	@DeleteMapping("/{id}/nodes")
 	public void deleteNodes(@PathVariable("id") int id) {
 		System.out.println("Nodes deletions request");
+		networkService.deleteNodes(id);
+		System.out.println("Nodes deletions completed");
+
 	}
 	
 	@JsonView(Views.Public.class)
 	@DeleteMapping("/{id}/links")
 	public void deleteLinks(@PathVariable("id") int id) {
 		System.out.println("Links deletions request");
+		networkService.deleteLinks(id);
+		System.out.println("Links deletions completed");
 	}
 	
 	@JsonView(Views.Public.class)
 	@DeleteMapping("/{id}/services")
 	public void deleteServices(@PathVariable("id") int id) {
 		System.out.println("Services deletions request");
+		networkService.deleteServices(id);
+		System.out.println("Services deletions completed");
+
 	}
 	
 	
