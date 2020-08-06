@@ -96,5 +96,25 @@ public class NetworkController implements EntityController<Network> {
 		return networkService.addServices(id, services);
 	}
 	
+	@JsonView(Views.Public.class)
+	@DeleteMapping("/{id}/nodes")
+	public void deleteNodes(@PathVariable("id") int id) {
+		System.out.println("Nodes deletions request");
+	}
+	
+	@JsonView(Views.Public.class)
+	@DeleteMapping("/{id}/links")
+	public void deleteLinks(@PathVariable("id") int id) {
+		System.out.println("Links deletions request");
+	}
+	
+	@JsonView(Views.Public.class)
+	@DeleteMapping("/{id}/services")
+	public void deleteServices(@PathVariable("id") int id) {
+		System.out.println("Services deletions request");
+	}
+	
+	
+	
 	
 }
