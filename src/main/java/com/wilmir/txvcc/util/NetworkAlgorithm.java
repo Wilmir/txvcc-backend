@@ -11,6 +11,7 @@ import com.wilmir.txvcc.model.ServiceModel;
 
 public class NetworkAlgorithm {
 
+	
 	public static void calculateUtilization(Network network) {		
 		List<Node> homingNodes = new ArrayList<>();
 		System.out.println("Initial size of homing nodes: " + homingNodes.size());
@@ -45,7 +46,7 @@ public class NetworkAlgorithm {
 
 	}
 
-
+	//Use Breadth First Search to identify the shortest path from each node to the homing node
 	private static void bfs(Node homingNode, List<Node> nodes) {
 
 		LinkedList<Node> queue = new LinkedList<>();
@@ -64,17 +65,20 @@ public class NetworkAlgorithm {
 
 			addServicetoLinksAlongThePath(currentNode, currentNode, homingNode);
 
-			for(Node neighbor : currentNode.getNeighbors()){
-				if(!neighbor.isVisited()) {
-					queue.add(neighbor);
-					neighbor.setVisited(true);
-					neighbor.setParentNode(currentNode);
+			if(currentNode.getNeighbors() != null) {
+				for(Node neighbor : currentNode.getNeighbors()){
+					if(!neighbor.isVisited()) {
+						queue.add(neighbor);
+						neighbor.setVisited(true);
+						neighbor.setParentNode(currentNode);
+					}
 				}
 			}
 
 		}
 	}
 
+	/*Perform recursive operation to trace the path through the parentNode*/
 	private static void addServicetoLinksAlongThePath(Node node, Node currentNode, Node homingNode) {
 		if(currentNode.getParentNode() != null) {
 			//check the corresponding link between the node and its parent
