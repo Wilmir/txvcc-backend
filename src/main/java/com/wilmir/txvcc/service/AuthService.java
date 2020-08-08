@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.wilmir.txvcc.dto.AuthResponseDTO;
 import com.wilmir.txvcc.dto.LoginDTO;
 import com.wilmir.txvcc.dto.RegistrationDTO;
 import com.wilmir.txvcc.model.User;
@@ -46,10 +47,13 @@ public class AuthService {
 	}
 
 
-	public String login(LoginDTO loginDTO) {
+	public AuthResponseDTO login(LoginDTO loginDTO) {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		return jwtProvider.generateToken(authentication);
+		String username = loginDTO.getUsername();
+		String authenticationToken = jwtProvider.generateToken(authentication);
+		
+		return new AuthResponseDTO(username, authenticationToken);
 	}
 
     public Optional<org.springframework.security.core.userdetails.User> getCurrentUser() {
@@ -57,7 +61,5 @@ public class AuthService {
                 getContext().getAuthentication().getPrincipal();
         return Optional.of(principal);
     }
-	
-	
 	
 }

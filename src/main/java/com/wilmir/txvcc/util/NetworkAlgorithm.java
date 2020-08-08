@@ -11,7 +11,7 @@ import com.wilmir.txvcc.model.ServiceModel;
 
 public class NetworkAlgorithm {
 
-	
+
 	public static void calculateUtilization(Network network) {		
 		List<Node> homingNodes = new ArrayList<>();
 		System.out.println("Initial size of homing nodes: " + homingNodes.size());

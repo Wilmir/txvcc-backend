@@ -227,7 +227,7 @@ public class NetworkService {
 
 		service.setNode(node);
 		service.setHomingNode(homingNode);
-
+		
 		return service;
 	}
 		

@@ -16,6 +16,7 @@ public class UserService{
 
 	@Autowired
 	private UserDAO userDAO;
+
 	
 	@Autowired
 	private NetworkDAO networkDAO;

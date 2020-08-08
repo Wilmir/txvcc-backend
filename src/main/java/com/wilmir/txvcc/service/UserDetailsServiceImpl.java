@@ -15,7 +15,6 @@ import com.wilmir.txvcc.model.User;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-
 	@Autowired
 	private UserService userService;
 	

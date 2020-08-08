@@ -25,7 +25,6 @@ import com.wilmir.txvcc.model.ServiceModel;
 import com.wilmir.txvcc.service.NetworkService;
 import com.wilmir.txvcc.view.Views;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/networks")
 public class NetworkController{
