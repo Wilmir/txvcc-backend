@@ -11,21 +11,10 @@ import com.wilmir.txvcc.model.Network;
 import com.wilmir.txvcc.model.Node;
 
 @Repository
-public class NodeDAO implements EntityDAO<Node> {
+public class NodeDAO implements EntityDAO<Node>{
 
 	@Autowired
 	private EntityManager entityManager;
-	
-	@Override
-	public List<Node> findAll() {
-		Session session = entityManager.unwrap(Session.class);
-		
-		Query<Node> query = session.createQuery("from Node", Node.class);
-		
-		List<Node> nodes = query.getResultList();
-		
-		return nodes;
-	}
 
 	@Override
 	public Node getEntityById(int id) {
@@ -51,26 +40,6 @@ public class NodeDAO implements EntityDAO<Node> {
 		}
 	}
 	
-	
-	public void update(Node entity) {
-		Session session = entityManager.unwrap(Session.class);
-		
-		System.out.println("We are in NodeDAO");
-		
-		Query query = session.createQuery("update Node "
-				+ "set name=:name, isHoming=:isHoming, network_id = :networkId "
-				+ "where id=:id");
-	
-		query.setParameter("name", entity.getName());
-		query.setParameter("isHoming", entity.isHoming());
-		query.setParameter("networkId", entity.getNetwork().getId());
-		query.setParameter("id", entity.getId());
-		
-		query.executeUpdate();
-		
-	}
-	
-	
 	@Override
 	public void deleteById(int id) {
 		Session session = entityManager.unwrap(Session.class);
@@ -82,8 +51,4 @@ public class NodeDAO implements EntityDAO<Node> {
 		query.executeUpdate();
 		
 	}
-
-
-	
-
 }

@@ -1,11 +1,9 @@
 package com.wilmir.txvcc.dao;
 
-import java.util.List;
+import com.wilmir.txvcc.model.Network;
 
 public interface EntityDAO<T> {
 
-	public List<T> findAll();
-	
 	public T getEntityById(int id);
 	
 	public void save(T entity);

@@ -3,6 +3,8 @@ package com.wilmir.txvcc.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.wilmir.txvcc.model.Link;
+import com.wilmir.txvcc.dto.LinkDTO;
+import com.wilmir.txvcc.dto.NetworkDTO;
+import com.wilmir.txvcc.dto.NodeDTO;
+import com.wilmir.txvcc.dto.ServiceDTO;
 import com.wilmir.txvcc.model.Network;
-import com.wilmir.txvcc.model.Node;
 import com.wilmir.txvcc.model.ServiceModel;
 import com.wilmir.txvcc.service.NetworkService;
 import com.wilmir.txvcc.view.Views;
@@ -24,105 +28,116 @@ import com.wilmir.txvcc.view.Views;
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/networks")
-public class NetworkController implements EntityController<Network> {
+public class NetworkController{
 	
 	@Autowired
 	private NetworkService networkService;
 	
-	@Override
+	
 	@JsonView(Views.Public.class)
 	@GetMapping("")
-	public List<Network> findAll(){
-		return networkService.findAll();
+	public ResponseEntity<List> findAll(){
+		List list = networkService.findAll();
+		
+		return new ResponseEntity<List>(list, HttpStatus.ACCEPTED);
 	}
 	
-	@Override
+	
 	@JsonView(Views.Public.class)
 	@GetMapping("/{id}")
-	public Network getEntityById(@PathVariable("id") int id) {
-		return networkService.getEntityById(id);
+	public ResponseEntity<NetworkDTO> getEntityById(@PathVariable("id") int id) {
+		NetworkDTO networkDTO =  networkService.getEntityById(id);
+		
+		return new ResponseEntity<NetworkDTO>(networkDTO, HttpStatus.ACCEPTED);		
 	}
-
-	@Override
+	
+	
 	@JsonView(Views.Public.class)
 	@PostMapping("")
-	public Network save(@RequestBody Network entity) {
-		System.out.println(entity);
-		entity.setId(0);
+	public ResponseEntity save(@RequestBody NetworkDTO networkDTO) {
+		networkDTO.setId(0);
 		
-		networkService.save(entity);
+		networkService.save(networkDTO);
 		
-		return entity;
+		return new ResponseEntity(HttpStatus.ACCEPTED);
 	}
 
-	@Override
+	
 	@JsonView(Views.Public.class)
 	@PutMapping("")
-	public Network updateEntity(@RequestBody Network entity) {
-		networkService.update(entity);
+	public ResponseEntity updateEntity(@RequestBody NetworkDTO networkDTO) {
+		networkService.update(networkDTO);
 		
-		return entity;
+		return new ResponseEntity(HttpStatus.ACCEPTED);
 	}
 
-	@Override
+	
 	@JsonView(Views.Public.class)
 	@DeleteMapping("/{id}")
-	public void deleteEntity(@PathVariable("id") int id) {
-		Network entity = networkService.getEntityById(id);
+	public ResponseEntity deleteEntity(@PathVariable("id") int id) {
+		NetworkDTO networkDTO = networkService.getEntityById(id);
 				
-		if(entity == null) {
+		if(networkDTO == null) {
 			throw new RuntimeException("Entity id not found: " + id);
 		}
 		
 		networkService.deleteById(id);
 		
+		return new ResponseEntity(HttpStatus.ACCEPTED);
 	}
 	
 	@JsonView(Views.Public.class)
 	@PostMapping("/{id}/nodes")
-	public List<Node> addNodes(@PathVariable("id") int id,@RequestBody List<Node> nodes) {
-		return networkService.addNodes(id, nodes);
+	public ResponseEntity addNodes(@PathVariable("id") int id,@RequestBody List<NodeDTO> nodes) {
+		networkService.addNodes(id, nodes);
+		
+		return new ResponseEntity(HttpStatus.ACCEPTED);
+
 	}
+	
 	
 	@JsonView(Views.Public.class)
 	@PostMapping("/{id}/links")
-	public List<Link> addLinks(@PathVariable("id") int id,@RequestBody List<Link> links) {
-		return networkService.addLinks(id, links);
+	public ResponseEntity addLinks(@PathVariable("id") int id,@RequestBody List<LinkDTO> links) {
+		networkService.addLinks(id, links);
+		
+		return new ResponseEntity(HttpStatus.ACCEPTED);
 	}
+	
 	
 	@JsonView(Views.Public.class)
 	@PostMapping("/{id}/services")
-	public List<ServiceModel> addServices(@PathVariable("id") int id,@RequestBody List<ServiceModel> services) {
-		return networkService.addServices(id, services);
+	public ResponseEntity addServices(@PathVariable("id") int id,@RequestBody List<ServiceDTO> servicesDTO) {
+		networkService.addServices(id, servicesDTO);
+	
+		return new ResponseEntity(HttpStatus.ACCEPTED);
 	}
+	
 	
 	@JsonView(Views.Public.class)
 	@DeleteMapping("/{id}/nodes")
-	public void deleteNodes(@PathVariable("id") int id) {
-		System.out.println("Nodes deletions request");
+	public ResponseEntity deleteNodes(@PathVariable("id") int id) {
 		networkService.deleteNodes(id);
-		System.out.println("Nodes deletions completed");
-
+		
+		return new ResponseEntity(HttpStatus.ACCEPTED);
 	}
+	
 	
 	@JsonView(Views.Public.class)
 	@DeleteMapping("/{id}/links")
-	public void deleteLinks(@PathVariable("id") int id) {
-		System.out.println("Links deletions request");
+	public ResponseEntity deleteLinks(@PathVariable("id") int id) {
 		networkService.deleteLinks(id);
-		System.out.println("Links deletions completed");
+		
+		return new ResponseEntity(HttpStatus.ACCEPTED);
 	}
+	
 	
 	@JsonView(Views.Public.class)
 	@DeleteMapping("/{id}/services")
-	public void deleteServices(@PathVariable("id") int id) {
-		System.out.println("Services deletions request");
+	public ResponseEntity deleteServices(@PathVariable("id") int id) {
 		networkService.deleteServices(id);
-		System.out.println("Services deletions completed");
-
+		
+		return new ResponseEntity(HttpStatus.ACCEPTED);
 	}
-	
-	
-	
 	
 }

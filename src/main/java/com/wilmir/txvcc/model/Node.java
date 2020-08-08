@@ -36,60 +36,59 @@ public class Node{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
+
 	@JsonView(Views.Public.class)
 	@Column(name = "name")
 	private String name;
-	
+
 	@JsonView(Views.Public.class)
 	@Column(name = "is_homing")
 	private boolean isHoming;
-	
+
 	@JsonView(Views.Public.class)
 	@CreationTimestamp
 	@Column(name = "date_created")
 	private Date dateCreated;
-	
+
 	@JsonView(Views.Public.class)
 	@UpdateTimestamp
 	@Column(name = "last_updated")
 	private Date lastUpdated;
-	
+
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-						  CascadeType.DETACH, CascadeType.REFRESH
-						  },
-			   fetch = FetchType.LAZY)
+			CascadeType.DETACH, CascadeType.REFRESH
+	},fetch = FetchType.LAZY)
 	@JoinColumn(name = "network_id")
 	private Network network;
 
 	@JsonView(Views.Public.class)
 	@OneToMany(mappedBy="node", cascade = CascadeType.ALL)
 	private List<ServiceModel> services;
-	
+
 	@OneToMany(mappedBy="homingNode", cascade = {CascadeType.ALL})
 	private List<ServiceModel> homingServices;
-	
+
 	@OneToMany(mappedBy="target", cascade = {CascadeType.ALL})
 	public List<Link> incomingLinks;
-	
+
 	@OneToMany(mappedBy="source", cascade = {CascadeType.ALL})
 	public List<Link> outgoingLinks;
 
 	@Transient
 	@JsonView(Views.Public.class)
 	private int linkCount;
-	
+
 	@Transient
 	private List<Node> neighbors;
 
 	@Transient
 	private Node parentNode;
-	
+
 	@Transient
 	private boolean visited = false;
-	
+
 	public Node() {
-		
+
 	}
 
 	public Node(String name, Date dateCreated, Date lastUpdated, Network network, List<ServiceModel> services,
@@ -123,8 +122,8 @@ public class Node{
 		this.name = name;
 	}
 
-	
-	
+
+
 	public boolean isHoming() {
 		return isHoming;
 	}
@@ -170,29 +169,29 @@ public class Node{
 	public void setServices(List<ServiceModel> services) {
 		this.services = services;
 	}
-	
+
 	public ServiceModel addServiceModeltoNode(ServiceModel service) {
 		if(services == null) {
 			services = new ArrayList<>();
 		}
-		
+
 		services.add(service);
 		service.setNode(this);
-		
+
 		return service;
 	}
-	
+
 	public ServiceModel addServiceModeltoHomingNode(ServiceModel service) {
 		if(homingServices == null) {
 			homingServices = new ArrayList<>();
 		}
-		
+
 		homingServices.add(service);
 		service.setHomingNode(this);
-		
+
 		return service;
 	}
-	
+
 
 
 	public List<ServiceModel> getHomingServices() {
@@ -220,12 +219,12 @@ public class Node{
 	public void setOutgoingLinks(List<Link> outgoingLinks) {
 		this.outgoingLinks = outgoingLinks;
 	}
-	
-	
+
+
 	public int getLinkCount() {
 		return linkCount;
 	}
-	
+
 
 	public List<Node> getNeighbors() {
 		return neighbors;
@@ -236,22 +235,22 @@ public class Node{
 		this.neighbors = neighbors;
 	}
 
-	
+
 	public void addNeighbor(Node node) {
 		if(this.neighbors == null) {
 			this.neighbors = new ArrayList<>();
 		}
-		
+
 		if(node.neighbors == null) {
 			node.neighbors = new ArrayList<>();
 		}
-		
+
 		this.neighbors.add(node);
-		
+
 		node.neighbors.add(this);
 	}
 
-	
+
 	public Node getParentNode() {
 		return parentNode;
 	}
@@ -276,21 +275,21 @@ public class Node{
 		if(this.incomingLinks == null) {
 			this.incomingLinks = new ArrayList<>();
 		}
-		
+
 		link.setTarget(this);
 		this.incomingLinks.add(link);
 	}
-	
+
 	public void addOutgoingLink(Link link) {
 		if(this.outgoingLinks == null) {
 			outgoingLinks = new ArrayList<>();
 		}
-		
+
 		link.setSource(this);
 		this.outgoingLinks.add(link);
 	}
-	
-	
+
+
 	public void removeIncomingLink(int id) {
 		for(Link link:incomingLinks) {
 			if(link.getId() == id) {
@@ -299,8 +298,8 @@ public class Node{
 			}
 		}	
 	}
-	
-	
+
+
 	public void removeOutgoignLink(int id) {
 		for(Link link:outgoingLinks) {
 			if(link.getId() == id) {
@@ -309,8 +308,8 @@ public class Node{
 			}
 		}	
 	}
-	
-	
+
+
 	@PostLoad
 	private void postLoad() {
 		this.linkCount = this.getOutgoingLinks().size() + this.getIncomingLinks().size();
@@ -321,5 +320,5 @@ public class Node{
 	public String toString() {
 		return "Node [id=" + id + ", name=" + name+ "]";
 	}	
-	
+
 }

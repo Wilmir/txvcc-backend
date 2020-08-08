@@ -9,15 +9,17 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.wilmir.txvcc.model.Link;
 import com.wilmir.txvcc.model.Network;
+import com.wilmir.txvcc.model.User;
 
 @Repository
-public class NetworkDAO implements EntityDAO<Network> {
+public class NetworkDAO  implements EntityDAO<Network>{
 
 	@Autowired
 	private EntityManager entityManager;
 	
-	@Override
+	
 	public List findAll() {
 		Session session = entityManager.unwrap(Session.class);
 		
@@ -28,6 +30,21 @@ public class NetworkDAO implements EntityDAO<Network> {
 		return networks;
 	}
 
+	
+	public List findByUserId(int userId) {
+		Session session = entityManager.unwrap(Session.class);
+
+		Query<Network> query = session.createQuery("select id, networkName, description, lastUpdated "
+														+ "from Network "
+														+ "where user_id=:userId");
+		
+		query.setParameter("userId", userId);
+		
+		List networks = query.getResultList();
+		
+		return networks;
+	}
+	
 	@Override
 	public Network getEntityById(int id) {
 		Session session = entityManager.unwrap(Session.class);
@@ -39,10 +56,13 @@ public class NetworkDAO implements EntityDAO<Network> {
 
 	@Override
 	public void save(Network entity) {
-		Session session = entityManager.unwrap(Session.class);
+		System.out.println("HELLO FROM SAVE NETWORK");
+		Session session = entityManager.unwrap(Session.class);	
+		User user = session.get(User.class, entity.getUser().getId());
+		System.out.println(user.getName());
 		
-		session.saveOrUpdate(entity);
 		
+		user.addNetwork(entity);
 	}
 	
 	public void update(Network entity) {

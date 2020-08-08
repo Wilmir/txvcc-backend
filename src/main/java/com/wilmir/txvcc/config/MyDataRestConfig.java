@@ -25,47 +25,7 @@ public class MyDataRestConfig implements WebMvcConfigurer, RepositoryRestConfigu
 			.allowCredentials(false)
 			.allowedOrigins("*")
 			.allowedMethods("*");
-	}
-
-	
-	
-	
-	/*
-	@Autowired
-	private EntityManager entityManager;
-	
-	
-	@Override
-	public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-		exposeIds(config);
-		
-		config.getCorsRegistry()
-				.addMapping("/**")
-				.allowCredentials(false)
-				.allowedOrigins("*")
-				.allowedMethods("PUT", "POST", "GET", "OPTIONS", "DELETE")
-				.exposedHeaders("Authorization", "Content-Type");
-		
-	}
-	*/
-
-	/*
-	private void exposeIds(RepositoryRestConfiguration config) {
-		
-		Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
-		
-		List<Class> entityClasses = new ArrayList<>();
-		
-		for(EntityType tempEntityType : entities) {
-			entityClasses.add(tempEntityType.getJavaType());
-		}
-		
-		Class[] domainTypes = entityClasses.toArray(new Class[0]);
-		
-		config.exposeIdsFor(domainTypes);
-	}
-	*/
-	
+	}	
 
 	
 }

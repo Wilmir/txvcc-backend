@@ -8,9 +8,12 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
@@ -27,45 +30,42 @@ import com.wilmir.txvcc.view.Views;
 @Entity
 @Table(name = "network")
 public class Network {
-	
-	@JsonView(Views.Public.class)
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
-	@JsonView(Views.Public.class)
+
 	@Column(name = "network_name")
 	private String networkName;
-	
-	@JsonView(Views.Public.class)
+
 	@Column(name = "description")
 	private String description;
-	
-	
-	@JsonView(Views.Public.class)
+
 	@Column(name = "date_created")
 	@CreationTimestamp
 	private Date dateCreated;
-	
-	@JsonView(Views.Public.class)
+
 	@Column(name = "last_updated")
 	@UpdateTimestamp
 	private Date lastUpdated;
-	
-	@JsonView(Views.Public.class)
+
 	@OneToMany(mappedBy="network", cascade = CascadeType.ALL)
 	private List<Node> nodes;
-	
-	@JsonView(Views.Public.class)
+
 	@OneToMany(mappedBy="network", cascade = CascadeType.ALL)
 	private List<Link> links;
-	
+
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.DETACH, CascadeType.REFRESH
+	},fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
 
 	public Network() {
-		
+
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -81,8 +81,8 @@ public class Network {
 	public void setNetworkName(String networkName) {
 		this.networkName = networkName;
 	}
-	
-	
+
+
 
 	public String getDescription() {
 		return description;
@@ -129,32 +129,32 @@ public class Network {
 	public void setLinks(List<Link> links) {
 		this.links = links;
 	}
-	
+
 	public Node addNode(Node node) {
 		if(nodes == null) {
 			nodes = new ArrayList<>();
 		}
-		
+
 		nodes.add(node);
-		
+
 		node.setNetwork(this);
-		
+
 		return node;
 	}
-	
+
 	public Link addLink(Link link) {
 		if(links == null) {
 			links = new ArrayList<>();
 		}
 
 		links.add(link);
-		
+
 		link.setNetwork(this);
-		
+
 		return link;
-		
+
 	}
-	
+
 	public void removeLink(int id) {
 		for(Link link : links) {
 			if(link.getId() == id) {
@@ -164,19 +164,28 @@ public class Network {
 		}
 	}
 
+	
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	@Override
 	public String toString() {
 		return "Network [id=" + id + ", networkName=" + networkName + ", dateCreated=" + dateCreated + ", lastUpdated="
 				+ lastUpdated + ", stations=" + nodes + ", links=" + links + "]";
 	}
-	
-	
+
+
 	@PostLoad
 	public void calculateUtilization() {
 		System.out.println("Calculating Utilization for: " + this.getNetworkName());
-		 NetworkAlgorithm.calculateUtilization(this);
+		NetworkAlgorithm.calculateUtilization(this);
 	}
 
-	
+
 }

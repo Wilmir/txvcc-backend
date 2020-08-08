@@ -10,5 +10,7 @@ public interface EntityService<T> {
 	
 	public void save(T entity);
 	
+	public void update(T entity);
+	
 	public void deleteById(int id);
 }
