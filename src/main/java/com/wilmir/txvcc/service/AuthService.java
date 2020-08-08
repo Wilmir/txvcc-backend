@@ -53,7 +53,7 @@ public class AuthService {
 		String username = loginDTO.getUsername();
 		String authenticationToken = jwtProvider.generateToken(authentication);
 		
-		return new AuthResponseDTO(username, authenticationToken);
+		return new AuthResponseDTO(authenticationToken, username);
 	}
 
     public Optional<org.springframework.security.core.userdetails.User> getCurrentUser() {
