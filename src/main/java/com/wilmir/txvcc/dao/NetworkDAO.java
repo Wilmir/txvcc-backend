@@ -31,6 +31,19 @@ public class NetworkDAO  implements EntityDAO<Network>{
 	}
 
 	
+	public List findAllByUserId(int id) {
+	Session session = entityManager.unwrap(Session.class);
+		
+		Query<Network> query = session.createQuery("select id, networkName, description, lastUpdated from Network where user_id=:id");
+		
+		query.setParameter("id", id);
+		
+		List networks = query.getResultList();
+		
+		return networks;
+	}
+	
+	
 	public List findByUserId(int userId) {
 		Session session = entityManager.unwrap(Session.class);
 
@@ -95,7 +108,6 @@ public class NetworkDAO  implements EntityDAO<Network>{
 		query.executeUpdate();
 		
 	}
-
 
 
 }

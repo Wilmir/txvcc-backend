@@ -22,19 +22,23 @@ import com.wilmir.txvcc.dto.NodeDTO;
 import com.wilmir.txvcc.dto.ServiceDTO;
 import com.wilmir.txvcc.model.Network;
 import com.wilmir.txvcc.model.ServiceModel;
+import com.wilmir.txvcc.model.User;
 import com.wilmir.txvcc.service.NetworkService;
+import com.wilmir.txvcc.service.UserService;
 import com.wilmir.txvcc.view.Views;
 
 @RestController
-@RequestMapping("/api/networks")
+@RequestMapping("/api")
 public class NetworkController{
-	
+
 	@Autowired
 	private NetworkService networkService;
-	
+
+	@Autowired
+	private UserService userService;
 	
 	@JsonView(Views.Public.class)
-	@GetMapping("")
+	@GetMapping("/networks")
 	public ResponseEntity<List> findAll(){
 		List list = networkService.findAll();
 		
@@ -43,7 +47,17 @@ public class NetworkController{
 	
 	
 	@JsonView(Views.Public.class)
-	@GetMapping("/{id}")
+	@GetMapping("users/{username}/networks")
+	public ResponseEntity<List> findAllByUserName(@PathVariable("username") String username) {
+		List list = networkService.findAllByUserName(username);
+				
+		return new ResponseEntity<List>(list, HttpStatus.ACCEPTED);
+
+	}
+	
+	
+	@JsonView(Views.Public.class)
+	@GetMapping("/networks/{id}")
 	public ResponseEntity<NetworkDTO> getEntityById(@PathVariable("id") int id) {
 		NetworkDTO networkDTO =  networkService.getEntityById(id);
 		
@@ -52,7 +66,7 @@ public class NetworkController{
 	
 	
 	@JsonView(Views.Public.class)
-	@PostMapping("")
+	@PostMapping("/networks")
 	public ResponseEntity save(@RequestBody NetworkDTO networkDTO) {
 		networkDTO.setId(0);
 		
@@ -63,7 +77,7 @@ public class NetworkController{
 
 	
 	@JsonView(Views.Public.class)
-	@PutMapping("")
+	@PutMapping("/networks")
 	public ResponseEntity updateEntity(@RequestBody NetworkDTO networkDTO) {
 		networkService.update(networkDTO);
 		
@@ -72,7 +86,7 @@ public class NetworkController{
 
 	
 	@JsonView(Views.Public.class)
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/networks/{id}")
 	public ResponseEntity deleteEntity(@PathVariable("id") int id) {
 		NetworkDTO networkDTO = networkService.getEntityById(id);
 				
@@ -86,7 +100,7 @@ public class NetworkController{
 	}
 	
 	@JsonView(Views.Public.class)
-	@PostMapping("/{id}/nodes")
+	@PostMapping("/networks/{id}/nodes")
 	public ResponseEntity addNodes(@PathVariable("id") int id,@RequestBody List<NodeDTO> nodes) {
 		networkService.addNodes(id, nodes);
 		
@@ -96,7 +110,7 @@ public class NetworkController{
 	
 	
 	@JsonView(Views.Public.class)
-	@PostMapping("/{id}/links")
+	@PostMapping("/networks/{id}/links")
 	public ResponseEntity addLinks(@PathVariable("id") int id,@RequestBody List<LinkDTO> links) {
 		networkService.addLinks(id, links);
 		
@@ -105,7 +119,7 @@ public class NetworkController{
 	
 	
 	@JsonView(Views.Public.class)
-	@PostMapping("/{id}/services")
+	@PostMapping("/networks/{id}/services")
 	public ResponseEntity addServices(@PathVariable("id") int id,@RequestBody List<ServiceDTO> servicesDTO) {
 		networkService.addServices(id, servicesDTO);
 	
@@ -114,7 +128,7 @@ public class NetworkController{
 	
 	
 	@JsonView(Views.Public.class)
-	@DeleteMapping("/{id}/nodes")
+	@DeleteMapping("/networks/{id}/nodes")
 	public ResponseEntity deleteNodes(@PathVariable("id") int id) {
 		networkService.deleteNodes(id);
 		
@@ -123,7 +137,7 @@ public class NetworkController{
 	
 	
 	@JsonView(Views.Public.class)
-	@DeleteMapping("/{id}/links")
+	@DeleteMapping("/networks/{id}/links")
 	public ResponseEntity deleteLinks(@PathVariable("id") int id) {
 		networkService.deleteLinks(id);
 		
@@ -132,7 +146,7 @@ public class NetworkController{
 	
 	
 	@JsonView(Views.Public.class)
-	@DeleteMapping("/{id}/services")
+	@DeleteMapping("/networks/{id}/services")
 	public ResponseEntity deleteServices(@PathVariable("id") int id) {
 		networkService.deleteServices(id);
 		

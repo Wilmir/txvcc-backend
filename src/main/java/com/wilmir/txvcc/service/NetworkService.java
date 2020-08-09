@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wilmir.txvcc.dao.EntityDAO;
 import com.wilmir.txvcc.dao.LinkDAO;
 import com.wilmir.txvcc.dao.NetworkDAO;
 import com.wilmir.txvcc.dao.NodeDAO;
 import com.wilmir.txvcc.dao.ServiceDAO;
+import com.wilmir.txvcc.dao.UserDAO;
 import com.wilmir.txvcc.dto.LinkDTO;
 import com.wilmir.txvcc.dto.NetworkDTO;
 import com.wilmir.txvcc.dto.NodeDTO;
@@ -29,6 +29,9 @@ public class NetworkService {
 
 	@Autowired
 	private NetworkDAO networkDAO;
+	
+	@Autowired
+	private UserDAO userDAO;
 
 	@Autowired
 	private NodeDAO nodeDAO;
@@ -46,6 +49,24 @@ public class NetworkService {
 	public List findAll() {
 		return networkDAO.findAll();
 	}
+
+
+	@Transactional
+	public List findAllByUserName(String username) {		
+		//org.springframework.security.core.userdetails.User loggedInUser = authService.getCurrentUser().orElseThrow(() -> 
+		//new IllegalArgumentException("No user logged in"));
+		
+		//if(loggedInUser.getUsername().equals(username)) {
+			System.out.println(">>>>>>>>>>>HELLLLLLO<<<<<<< " + username);
+		
+			User user = userDAO.getEntityByUserName(username);
+			
+			return networkDAO.findAllByUserId(user.getId());
+		//}
+		
+		//return null;
+	}
+		
 
 	@Transactional
 	public NetworkDTO getEntityById(int id) {
@@ -232,6 +253,5 @@ public class NetworkService {
 		
 		return service;
 	}
-		
 
 }
