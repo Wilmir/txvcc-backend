@@ -1,6 +1,7 @@
 package com.wilmir.txvcc.security;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -27,10 +28,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String jwt = getJwtFromRequest(request);
+				
 		
 		if(StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {
 			String username = jwtProvider.getUsernamefromJWT(jwt);
-		
+					
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
@@ -44,8 +46,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	}
 
 	private String getJwtFromRequest(HttpServletRequest request) {
-		String bearerToken = request.getParameter("Authorization");
-		
+		String bearerToken = request.getHeader("Authorization");
+		//String bearerToken = request.getParameter("Authorization");
+						
 		if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
 			return bearerToken.substring(7);
 		}

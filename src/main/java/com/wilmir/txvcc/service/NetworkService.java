@@ -50,9 +50,12 @@ public class NetworkService {
 	@Transactional
 	public NetworkDTO getEntityById(int id) {
 		Network network = networkDAO.getEntityById(id);
-				
-		NetworkDTO networkDTO= mapFromNetworktoDto(network);
 		
+		NetworkDTO networkDTO = null;
+		if(networkOwnerIsLoggedIn(network)) {
+			networkDTO= mapFromNetworktoDto(network);
+		}
+			
 		return networkDTO;
 	}
 
@@ -206,14 +209,13 @@ public class NetworkService {
 	private Link mapFromDtoToLink(LinkDTO linkDTO) {
 		Link link = new Link();
 		link.setCapacity(linkDTO.getCapacity());
-		link.setType(linkDTO.getType());
-
-		Node source = nodeDAO.getEntityById(linkDTO.getSourceId());
-		Node target = nodeDAO.getEntityById(linkDTO.getTargetId());
-
+		link.setType(linkDTO.getType());		
+		Node source = nodeDAO.getEntityById(linkDTO.getSource_id());
+		Node target = nodeDAO.getEntityById(linkDTO.getTarget_id());
+		
 		link.setSource(source);
 		link.setTarget(target);
-
+		
 		return link;
 	}
 
@@ -222,8 +224,8 @@ public class NetworkService {
 		service.setType(serviceDTO.getType());
 		service.setCapacity(serviceDTO.getCapacity());
 
-		Node node = nodeDAO.getEntityById(serviceDTO.getNodeId());
-		Node homingNode = nodeDAO.getEntityById(serviceDTO.getHomingNodeId());
+		Node node = nodeDAO.getEntityById(serviceDTO.getNode_id());
+		Node homingNode = nodeDAO.getEntityById(serviceDTO.getHoming_node_id());
 
 		service.setNode(node);
 		service.setHomingNode(homingNode);
